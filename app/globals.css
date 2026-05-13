@@ -24,3 +24,24 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+@layer utilities {
+  .flicker {
+    animation: flicker-blink var(--flicker-duration) steps(1, end) infinite;
+    animation-delay: calc(-1 * var(--flicker-phase) / 360deg * var(--flicker-duration));
+  }
+}
+
+@keyframes flicker-blink {
+  0% {
+    background-color: var(--flicker-on-color);
+  }
+
+  50% {
+    background-color: var(--flicker-off-color);
+  }
+
+  100% {
+    background-color: var(--flicker-off-color);
+  }
+}
