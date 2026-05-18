@@ -3,10 +3,10 @@ export type RadioChannel = {
   name: string;
   streamUrl: string;
   imageUrl: string | null;
-  type: "qmusic" | "vrt";
+  type: "qmusic" | "joe";
 };
 
-export type QmusicApiChannel = {
+export type DpgMediaApiChannel = {
   id: number;
   type: "channel";
   published_start: number;
@@ -41,6 +41,6 @@ export type QmusicApiChannel = {
   locations: unknown[];
 };
 
-export type QmusicApiResponse = {
-  data: QmusicApiChannel[];
+export type DpgMediaApiResponse = {
+  data: DpgMediaApiChannel[];
 };

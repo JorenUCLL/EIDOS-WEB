@@ -4,6 +4,7 @@ import Provider from "@/lib/radio/provider";
 import { RadioChannel } from "@/types";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
+import Widget from "../widget";
 
 export default function Radio() {
   const [channels, setChannels] = useState<Record<string, RadioChannel>>({});
@@ -35,67 +36,71 @@ export default function Radio() {
     fetchAll();
   }, [channels]);
 
-  if (error) return <div>failed to load</div>;
-  if (isLoading) return <div>loading...</div>;
-
   const channelList = Object.values(channels);
   const channel = channelList[radioIndex];
 
   return (
-    <div className="flex flex-col items-center gap-4">
-      <div className="bg-gray-300 rounded-xl p-5 flex flex-col items-center gap-3">
-        {channel && (
-          <div className="flex flex-col items-center gap-3">
-            {channel.imageUrl && (
-              <Image src={channel.imageUrl} width={128} height={128} alt="" />
-            )}
-            <p className="font-bold text-lg">{channel.name}</p>
-            <audio
-              ref={audioRef}
-              controls
-              autoPlay
-              src={channel.streamUrl}
-              onWaiting={() => setIsBuffering(true)}
-              onCanPlay={() => setIsBuffering(false)}
-              onPlay={() => {
-                if (audioRef.current) {
-                  const audio = audioRef.current;
-                  if (audio.buffered.length > 0) {
-                    audio.currentTime = audio.buffered.end(
-                      audio.buffered.length - 1,
-                    );
+    <Widget
+      title={channel ? `Radio - ${channel.name}` : "Radio"}
+      image={
+        channel && channel.imageUrl !== null
+          ? channel.imageUrl
+          : "https://images.squarespace-cdn.com/content/v1/54becebee4b05d09416fe7e4/1740078384482-SNXQ2PY5WDH0I2I35RZU/iHP_primary_Color.png?format=500w"
+      }
+    >
+      <div className="flex flex-col items-center gap-4">
+        <div className="flex flex-col items-center gap-3">
+          {error && <div>failed to load</div>}
+          {!error && isLoading && <div>failed to load</div>}
+          {!error && !isLoading && channel && (
+            <div className="flex flex-col items-center gap-3">
+              <audio
+                ref={audioRef}
+                controls
+                autoPlay
+                src={channel.streamUrl}
+                onWaiting={() => setIsBuffering(true)}
+                onCanPlay={() => setIsBuffering(false)}
+                onPlay={() => {
+                  if (audioRef.current) {
+                    const audio = audioRef.current;
+                    if (audio.buffered.length > 0) {
+                      audio.currentTime = audio.buffered.end(
+                        audio.buffered.length - 1,
+                      );
+                    }
                   }
-                }
-              }}
-            />
-            {isBuffering && (
-              <p className="text-sm text-gray-500">Loading stream...</p>
-            )}
-            <div className="flex gap-2">
-              <button
-                className="bg-red-500 px-3 py-2 rounded text-white"
-                onClick={() =>
-                  setRadioIndex((i) =>
-                    i === 0 ? channelList.length - 1 : i - 1,
-                  )
-                }
-              >
-                ← Prev
-              </button>
-              <button
-                className="bg-red-500 px-3 py-2 rounded text-white"
-                onClick={() =>
-                  setRadioIndex((i) =>
-                    i === channelList.length - 1 ? 0 : i + 1,
-                  )
-                }
-              >
-                Next →
-              </button>
+                }}
+              />
+              {isBuffering && (
+                <p className="text-sm text-gray-500">Loading stream...</p>
+              )}
+              <div className="flex gap-2">
+                <button
+                  className="bg-red-500 px-3 py-2 rounded text-white"
+                  onClick={() =>
+                    setRadioIndex((i) =>
+                      i === 0 ? channelList.length - 1 : i - 1,
+                    )
+                  }
+                >
+                  ← Prev
+                </button>
+                <button
+                  className="bg-red-500 px-3 py-2 rounded text-white"
+                  onClick={() =>
+                    setRadioIndex((i) =>
+                      i === channelList.length - 1 ? 0 : i + 1,
+                    )
+                  }
+                >
+                  Next →
+                </button>
+              </div>
             </div>
-          </div>
-        )}
+          )}
+        </div>
       </div>
-    </div>
+    </Widget>
   );
 }
