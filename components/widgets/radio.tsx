@@ -2,11 +2,10 @@
 import providers from "@/lib/radio";
 import Provider from "@/lib/radio/provider";
 import { RadioChannel } from "@/types";
-import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import Widget from "../widget";
 
-export default function Radio() {
+export default function RadioWidget() {
   const [channels, setChannels] = useState<Record<string, RadioChannel>>({});
   const [radioIndex, setRadioIndex] = useState<number>(0);
   const [error, setError] = useState(false);
