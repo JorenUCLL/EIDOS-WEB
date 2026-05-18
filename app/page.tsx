@@ -1,5 +1,7 @@
 "use client";
 
+import Status from "@/components/status";
+import { Spinner } from "@/components/ui/spinner";
 import widgets from "@/components/widgets";
 import { useState } from "react";
 

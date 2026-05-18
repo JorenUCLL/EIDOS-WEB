@@ -4,6 +4,8 @@ import Provider from "@/lib/radio/provider";
 import { RadioChannel } from "@/types";
 import { useEffect, useRef, useState } from "react";
 import Widget from "../widget";
+import Status from "../status";
+import { CircleX } from "lucide-react";
 
 export default function RadioWidget() {
   const [channels, setChannels] = useState<Record<string, RadioChannel>>({});
@@ -51,8 +53,20 @@ export default function RadioWidget() {
     >
       <div className="flex flex-col items-center gap-4">
         <div className="flex flex-col items-center gap-3">
-          {error && <div>failed to load</div>}
-          {!error && isLoading && <div>failed to load</div>}
+          {error && (
+            <Status
+              description="Failed to load"
+              Icon={CircleX}
+              variant="danger"
+            />
+          )}
+          {((!error && isLoading) || isBuffering) && (
+            <Status
+              description="Starting radio..."
+              Icon={"loading"}
+              variant="neutral"
+            />
+          )}
           {!error && !isLoading && channel && (
             <div className="flex flex-col items-center gap-3">
               <audio
@@ -71,30 +85,30 @@ export default function RadioWidget() {
                         audio.buffered.length - 1,
                       );
                     }
+                    setIsBuffering(false);
                   }
                 }}
               />
-              {isBuffering && (
-                <p className="text-sm text-gray-500">Loading stream...</p>
-              )}
               <div className="flex gap-2">
                 <button
                   className="bg-red-500 px-3 py-2 rounded text-white"
-                  onClick={() =>
+                  onClick={() => {
                     setRadioIndex((i) =>
                       i === 0 ? channelList.length - 1 : i - 1,
-                    )
-                  }
+                    );
+                    setIsBuffering(true);
+                  }}
                 >
                   ← Prev
                 </button>
                 <button
                   className="bg-red-500 px-3 py-2 rounded text-white"
-                  onClick={() =>
+                  onClick={() => {
                     setRadioIndex((i) =>
                       i === channelList.length - 1 ? 0 : i + 1,
-                    )
-                  }
+                    );
+                    setIsBuffering(true);
+                  }}
                 >
                   Next →
                 </button>
