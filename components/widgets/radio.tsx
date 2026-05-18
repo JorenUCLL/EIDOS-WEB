@@ -6,6 +6,7 @@ import { useEffect, useRef, useState } from "react";
 import Widget from "../widget";
 import Status from "../status";
 import { CircleX } from "lucide-react";
+import { Button } from "../ui/button";
 
 export default function RadioWidget() {
   const [channels, setChannels] = useState<Record<string, RadioChannel>>({});
@@ -90,8 +91,8 @@ export default function RadioWidget() {
                 }}
               />
               <div className="flex gap-2">
-                <button
-                  className="bg-red-500 px-3 py-2 rounded text-white"
+                <Button
+                  size="lg"
                   onClick={() => {
                     setRadioIndex((i) =>
                       i === 0 ? channelList.length - 1 : i - 1,
@@ -100,9 +101,9 @@ export default function RadioWidget() {
                   }}
                 >
                   ← Prev
-                </button>
-                <button
-                  className="bg-red-500 px-3 py-2 rounded text-white"
+                </Button>
+                <Button
+                  size="lg"
                   onClick={() => {
                     setRadioIndex((i) =>
                       i === channelList.length - 1 ? 0 : i + 1,
@@ -111,7 +112,7 @@ export default function RadioWidget() {
                   }}
                 >
                   Next →
-                </button>
+                </Button>
               </div>
             </div>
           )}

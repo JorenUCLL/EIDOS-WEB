@@ -55,24 +55,23 @@
   --foreground: oklch(0.635 0 0);
   /* #9A9A9A */
   --card: oklch(0.22 0 0);
-  /* slightly lighter than bg */
   --card-foreground: oklch(0.635 0 0);
   --popover: oklch(0.22 0 0);
   --popover-foreground: oklch(0.635 0 0);
-  --primary: oklch(0.75 0 0);
-  /* lighter gray for interactive elements */
-  --primary-foreground: oklch(0.2 0 0);
+  --primary: oklch(0.54 0.07 240);
+  /* dusty blue #5B7FA6 */
+  --primary-foreground: oklch(0.97 0 0);
   --secondary: oklch(0.27 0 0);
   --secondary-foreground: oklch(0.635 0 0);
   --muted: oklch(0.27 0 0);
   --muted-foreground: oklch(0.5 0 0);
-  /* dimmer than foreground */
   --accent: oklch(0.27 0 0);
   --accent-foreground: oklch(0.635 0 0);
   --destructive: oklch(0.704 0.191 22.216);
   --border: oklch(1 0 0 / 10%);
   --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.5 0 0);
+  --ring: oklch(0.54 0.07 240);
+  /* dusty blue ring */
   --chart-1: oklch(0.75 0 0);
   --chart-2: oklch(0.635 0 0);
   --chart-3: oklch(0.5 0 0);
@@ -81,13 +80,15 @@
   --radius: 0.625rem;
   --sidebar: oklch(0.22 0 0);
   --sidebar-foreground: oklch(0.635 0 0);
-  --sidebar-primary: oklch(0.75 0 0);
-  --sidebar-primary-foreground: oklch(0.2 0 0);
+  --sidebar-primary: oklch(0.54 0.07 240);
+  /* dusty blue */
+  --sidebar-primary-foreground: oklch(0.97 0 0);
   --sidebar-accent: oklch(0.27 0 0);
   --sidebar-accent-foreground: oklch(0.635 0 0);
   --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.5 0 0);
-  --font-sans: system-ui
+  --sidebar-ring: oklch(0.54 0.07 240);
+  /* dusty blue ring */
+  --font-sans: system-ui;
 }
 
 @layer base {

@@ -2,6 +2,7 @@
 import { LucideProps } from "lucide-react";
 import { ComponentType } from "react";
 import { Spinner } from "./ui/spinner";
+import { Card, CardContent } from "./ui/card";
 
 interface Props {
   Icon?: ComponentType<LucideProps> | "loading" | null;
@@ -34,18 +35,18 @@ export default function Status({
     ) : null;
 
   return (
-    <section
-      className={`absolute top-10 right-10 flex items-center gap-2 bg-stone-800 px-3 py-2 rounded-md ${color}`}
-    >
-      {iconComponent}
-      <p>
-        {title && (
-          <span className={`font-bold ${description ? "mr-1" : ""}`}>
-            {title}
-          </span>
-        )}
-        {description}
-      </p>
-    </section>
+    <Card className="absolute top-10 right-10">
+      <CardContent className={`flex items-center gap-2 ${color}`}>
+        {iconComponent}
+        <p>
+          {title && (
+            <span className={`font-bold ${description ? "mr-1" : ""}`}>
+              {title}
+            </span>
+          )}
+          {description}
+        </p>
+      </CardContent>
+    </Card>
   );
 }

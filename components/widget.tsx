@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { ReactNode } from "react";
 import { Skeleton } from "./ui/skeleton";
+import { Spinner } from "./ui/spinner";
 
 interface Props {
   title: string;
@@ -38,7 +39,12 @@ export default function Widget({
         )}
       </div>
 
-      {children}
+      {loading && (
+        <div className="flex justify-center items-center">
+          <Spinner className="size-8" />
+        </div>
+      )}
+      {!loading && children}
     </section>
   );
 }
