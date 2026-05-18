@@ -16,7 +16,14 @@ export default function Widget({ title, image, children }: Props) {
         <h1 className="justify-center flex text-3xl">{title}</h1>
 
         <div className="justify-center flex">
-          <Image src={image} alt="Phone" width={200} height={200} />
+          <Image
+            src={image}
+            alt={title + " image"}
+            height={200}
+            width={200}
+            objectFit="contain"
+            className=" h-52 w-auto objec"
+          />
         </div>
       </div>
 

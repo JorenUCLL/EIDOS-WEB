@@ -45,7 +45,7 @@ export default function Radio() {
       image={
         channel && channel.imageUrl !== null
           ? channel.imageUrl
-          : "https://images.squarespace-cdn.com/content/v1/54becebee4b05d09416fe7e4/1740078384482-SNXQ2PY5WDH0I2I35RZU/iHP_primary_Color.png?format=500w"
+          : "/images/radio.png"
       }
     >
       <div className="flex flex-col items-center gap-4">
@@ -57,6 +57,7 @@ export default function Radio() {
               <audio
                 ref={audioRef}
                 controls
+                className="hidden"
                 autoPlay
                 src={channel.streamUrl}
                 onWaiting={() => setIsBuffering(true)}

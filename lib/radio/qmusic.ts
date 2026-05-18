@@ -12,7 +12,7 @@ class Qmusic extends Provider {
           id,
           name: channel.data.name,
           streamUrl: channel.data.streams.mp3![0].source,
-          imageUrl: channel.data.logo.app_logo,
+          imageUrl: channel.data.logo.app_logo_white,
           type: "qmusic",
         };
         return acc;
