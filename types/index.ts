@@ -1,3 +1,6 @@
+import { LucideProps } from "lucide-react";
+import { ComponentType, JSX } from "react";
+
 export type RadioChannel = {
   id: string;
   name: string;
@@ -44,3 +47,10 @@ export type DpgMediaApiChannel = {
 export type DpgMediaApiResponse = {
   data: DpgMediaApiChannel[];
 };
+
+export type Widget = {
+  id: string;
+  name: string;
+  widget: () => JSX.Element;
+  icon: ComponentType<LucideProps>
+}
