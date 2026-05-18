@@ -47,6 +47,8 @@ export default function Radio() {
           ? channel.imageUrl
           : "/images/radio.png"
       }
+      loading={isLoading}
+      imageLoading={isLoading}
     >
       <div className="flex flex-col items-center gap-4">
         <div className="flex flex-col items-center gap-3">
