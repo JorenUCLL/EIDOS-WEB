@@ -51,11 +51,11 @@ export type DpgMediaApiResponse = {
 export type Widget = {
   id: string;
   name: string;
-  widget: () => JSX.Element;
-  icon: ComponentType<LucideProps>
-}
+  widget: ComponentType<{ message: number | null }>;
+  icon: ComponentType<LucideProps>;
+};
 
 export type WebsocketEvent = {
-  type: string | "widget" | "function",
-  value: string
+  type: "WIDGET" | "FUNCTION",
+  timestamp: number
 }
