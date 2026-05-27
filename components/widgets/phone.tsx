@@ -1,7 +1,7 @@
 "use client";
 import Widget from "../widget";
 
-export default function PhoneWidget() {
+export default function PhoneWidget({ message }: { message: number | null }) {
   return (
     <Widget
       title="Phone"

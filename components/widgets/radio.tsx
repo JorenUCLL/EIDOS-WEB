@@ -8,7 +8,7 @@ import Status from "../status";
 import { CircleX } from "lucide-react";
 import { Button } from "../ui/button";
 
-export default function RadioWidget() {
+export default function RadioWidget({ message }: { message: number | null }) {
   const [channels, setChannels] = useState<Record<string, RadioChannel>>({});
   const [radioIndex, setRadioIndex] = useState<number>(0);
   const [error, setError] = useState(false);
@@ -40,6 +40,15 @@ export default function RadioWidget() {
 
   const channelList = Object.values(channels);
   const channel = channelList[radioIndex];
+
+  useEffect(() => {
+    async function handleMessage() {
+      if (!message) return;
+      setRadioIndex((i) => (i === channelList.length - 1 ? 0 : i + 1));
+      setIsBuffering(true);
+    }
+    handleMessage();
+  }, [message]);
 
   return (
     <Widget

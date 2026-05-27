@@ -1,16 +1,25 @@
 "use client";
 import channels from "@/lib/radio/index2";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Widget from "../widget";
 import Status from "../status";
 import { Button } from "../ui/button";
 
-export default function Radio2Widget() {
+export default function Radio2Widget({ message }: { message: number | null }) {
   const [radioIndex, setRadioIndex] = useState<number>(0);
   const audioRef = useRef<HTMLAudioElement>(null);
   const [isBuffering, setIsBuffering] = useState(false);
 
   const channel = channels[radioIndex];
+
+  useEffect(() => {
+    async function handleMessage() {
+      if (!message) return;
+      setRadioIndex((i) => (i === channels.length - 1 ? 0 : i + 1));
+      setIsBuffering(true);
+    }
+    handleMessage();
+  }, [message]);
 
   return (
     <Widget
