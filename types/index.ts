@@ -44,3 +44,8 @@ export type DpgMediaApiChannel = {
 export type DpgMediaApiResponse = {
   data: DpgMediaApiChannel[];
 };
+
+export type WebsocketEvent = {
+  type: string | "widget" | "function",
+  value: string
+}
