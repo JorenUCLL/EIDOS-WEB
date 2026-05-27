@@ -1,74 +1,38 @@
 "use client";
-import providers from "@/lib/radio";
-import Provider from "@/lib/radio/provider";
-import { RadioChannel } from "@/types";
-import { useEffect, useRef, useState } from "react";
+import channels from "@/lib/radio/index2";
+import { useRef, useState } from "react";
 import Widget from "../widget";
 import Status from "../status";
-import { CircleX } from "lucide-react";
 import { Button } from "../ui/button";
 
-export default function RadioWidget() {
-  const [channels, setChannels] = useState<Record<string, RadioChannel>>({});
+export default function Radio2Widget() {
   const [radioIndex, setRadioIndex] = useState<number>(0);
-  const [error, setError] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
   const audioRef = useRef<HTMLAudioElement>(null);
   const [isBuffering, setIsBuffering] = useState(false);
 
-  useEffect(() => {
-    if (Object.values(channels).length > 0) return;
-    const fetchAll = async () => {
-      try {
-        await Promise.all(
-          Object.values(providers).map(async (provider: Provider) => {
-            const data = await provider.fetchChannels();
-            setChannels((prev) => ({ ...prev, ...data }));
-          }),
-        );
-      } catch (err) {
-        if (err instanceof Error) {
-          console.error(err.message);
-        }
-        setError(true);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    fetchAll();
-  }, [channels]);
-
-  const channelList = Object.values(channels);
-  const channel = channelList[radioIndex];
+  const channel = channels[radioIndex];
 
   return (
     <Widget
-      title={channel ? `Radio - ${channel.name}` : "Radio"}
+      title={channel ? `Radio2 - ${channel.name}` : "Radio"}
       image={
         channel && channel.imageUrl !== null
           ? channel.imageUrl
           : "/images/radio.png"
       }
-      loading={isLoading}
-      imageLoading={isLoading}
+      loading={false}
+      imageLoading={false}
     >
       <div className="flex flex-col items-center gap-4">
         <div className="flex flex-col items-center gap-3">
-          {error && (
-            <Status
-              description="Failed to load"
-              Icon={CircleX}
-              variant="danger"
-            />
-          )}
-          {((!error && isLoading) || isBuffering) && (
+          {isBuffering && (
             <Status
               description="Starting radio..."
               Icon={"loading"}
               variant="neutral"
             />
           )}
-          {!error && !isLoading && channel && (
+          {channel && (
             <div className="flex flex-col items-center gap-3">
               <audio
                 ref={audioRef}
@@ -95,7 +59,7 @@ export default function RadioWidget() {
                   size="lg"
                   onClick={() => {
                     setRadioIndex((i) =>
-                      i === 0 ? channelList.length - 1 : i - 1,
+                      i === 0 ? channels.length - 1 : i - 1,
                     );
                     setIsBuffering(true);
                   }}
@@ -106,7 +70,7 @@ export default function RadioWidget() {
                   size="lg"
                   onClick={() => {
                     setRadioIndex((i) =>
-                      i === channelList.length - 1 ? 0 : i + 1,
+                      i === channels.length - 1 ? 0 : i + 1,
                     );
                     setIsBuffering(true);
                   }}
