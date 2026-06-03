@@ -7,11 +7,11 @@ import { useWidgetSocket } from "@/hooks/useWidgetSocket";
 
 export default function Home() {
   const { widgetIndex, advance } = useWidgetIndex();
-  const [widgetMessage, setWidgetMessage] = useState<number | null>(null);
+  const [widgetMessage, setWidgetMessage] = useState<number>(0);
 
   const handleNext = useCallback(() => {
     advance();
-    setWidgetMessage(null);
+    setWidgetMessage(0);
   }, [advance]);
 
   const handleFunction = useCallback((ts: number) => {
