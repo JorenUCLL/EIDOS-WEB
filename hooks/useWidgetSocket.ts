@@ -9,7 +9,7 @@ export function useWidgetSocket(onNext: () => void, onFunction: (ts: number) => 
   }, [onNext, onFunction]);
 
   const { send, status } = useWebSocket<WebsocketEvent, { type: "WIDGET"; data: string }>(
-    "ws://localhost:8765",
+    process.env.NEXT_PUBLIC_WEBSOCKET_URL ?? "ws://localhost:8765",
     handleMessage,
   );
 
