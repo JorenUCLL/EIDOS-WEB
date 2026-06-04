@@ -1,9 +1,33 @@
-import Radio from "@/components/widgets/radio";
+"use client";
+import { useState, useCallback } from "react";
+import { Button } from "@/components/ui/button";
+import widgets from "@/components/widgets";
+import { useWidgetIndex } from "@/hooks/useWidgetIndex";
+import { useWidgetSocket } from "@/hooks/useWidgetSocket";
 
 export default function Home() {
+  const { widgetIndex, advance } = useWidgetIndex();
+  const [widgetMessage, setWidgetMessage] = useState<number>(0);
+
+  const handleNext = useCallback(() => {
+    advance();
+    setWidgetMessage(0);
+  }, [advance]);
+
+  const handleFunction = useCallback((ts: number) => {
+    setWidgetMessage(ts);
+  }, []);
+
+  useWidgetSocket(handleNext, handleFunction);
+
+  const Widget = widgets.getAll()[widgetIndex];
+
   return (
-    <main className="min-h-screen px-10 py-7">
-      <Radio />
+    <main className="min-h-screen p-10">
+      <Widget.widget message={widgetMessage} />
+      <Button onClick={handleNext} className="absolute top-10 left-10">
+        Next Widget
+      </Button>
     </main>
   );
 }
