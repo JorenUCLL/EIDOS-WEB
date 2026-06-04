@@ -5,7 +5,6 @@ export function useWidgetIndex() {
   const [widgetIndex, setWidgetIndex] = useState(0);
   const indexRef = useRef(0);
 
-  // Sync from URL only after hydration
   useEffect(() => {
     const sync = async () => {
       const id = new URLSearchParams(window.location.search).get("id");
