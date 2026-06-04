@@ -8,8 +8,10 @@ export function useWidgetSocket(onNext: () => void, onFunction: (ts: number) => 
     if (data.type === "FUNCTION") onFunction(Date.now());
   }, [onNext, onFunction]);
 
-  const { } = useWebSocket<WebsocketEvent, { type: "WIDGET"; data: string }>(
+  const { send, status } = useWebSocket<WebsocketEvent, { type: "WIDGET"; data: string }>(
     "ws://localhost:8765",
     handleMessage,
   );
+
+  return { send, status };
 }

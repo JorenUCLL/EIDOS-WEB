@@ -1,4 +1,6 @@
-import { useEffect, useRef, useCallback } from 'react';
+import { useEffect, useRef, useCallback, useState } from 'react';
+
+export type WebSocketStatus = 'connecting' | 'connected' | 'disconnected' | 'failed';
 
 interface UseWebSocketOptions {
   maxRetries?: number;
@@ -10,7 +12,7 @@ export function useWebSocket<TReceive, TSend = TReceive>(
   onMessage: (data: TReceive) => void,
   options: UseWebSocketOptions = {}
 ) {
-  const { maxRetries = 900000, retryInterval = 3000 } = options;
+  const { maxRetries = 1000000, retryInterval = 3000 } = options;
 
   const ws = useRef<WebSocket | null>(null);
   const onMessageRef = useRef(onMessage);
@@ -18,6 +20,8 @@ export function useWebSocket<TReceive, TSend = TReceive>(
   const retryTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
   const isManuallyClosed = useRef(false);
   const connectRef = useRef<() => void>(() => { });
+
+  const [status, setStatus] = useState<WebSocketStatus>('connecting');
 
   const log = useCallback((message: string, ...args: unknown[]) => {
     console.log(`[WebSocket] ${message}`, ...args);
@@ -29,6 +33,7 @@ export function useWebSocket<TReceive, TSend = TReceive>(
 
   const connect = useCallback(() => {
     log(`Connecting to ${url}…`);
+    setStatus('connecting');
     ws.current = new WebSocket(url);
 
     ws.current.onmessage = (event: MessageEvent<string>) => {
@@ -40,10 +45,12 @@ export function useWebSocket<TReceive, TSend = TReceive>(
     ws.current.onopen = () => {
       log(`Connected${retryCount.current > 0 ? ` (after ${retryCount.current} retries)` : ''}`);
       retryCount.current = 0;
+      setStatus('connected');
     };
 
     ws.current.onclose = (event: CloseEvent) => {
       log(`Connection closed — code: ${event.code}, reason: ${event.reason || '(none)'}, clean: ${event.wasClean}`);
+      setStatus('disconnected');
 
       if (isManuallyClosed.current) {
         log('Closed intentionally, not reconnecting');
@@ -51,6 +58,7 @@ export function useWebSocket<TReceive, TSend = TReceive>(
       }
       if (retryCount.current >= maxRetries) {
         log(`Max retries (${maxRetries}) reached, giving up`);
+        setStatus('failed');
         return;
       }
 
@@ -69,15 +77,19 @@ export function useWebSocket<TReceive, TSend = TReceive>(
   }, [connect]);
 
   useEffect(() => {
-    isManuallyClosed.current = false;
-    connect();
+    const sync = async () => {
+      isManuallyClosed.current = false;
+      connect();
 
-    return () => {
-      log('Cleaning up — closing connection');
-      isManuallyClosed.current = true;
-      if (retryTimeout.current) clearTimeout(retryTimeout.current);
-      ws.current?.close();
-    };
+      return () => {
+        log('Cleaning up — closing connection');
+        isManuallyClosed.current = true;
+        if (retryTimeout.current) clearTimeout(retryTimeout.current);
+        ws.current?.close();
+      };
+
+    }
+    sync()
   }, [connect, log]);
 
   const send = useCallback((message: TSend) => {
@@ -89,5 +101,5 @@ export function useWebSocket<TReceive, TSend = TReceive>(
     }
   }, [log]);
 
-  return { send };
+  return { send, status };
 }

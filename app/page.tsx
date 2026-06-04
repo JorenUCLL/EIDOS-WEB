@@ -1,9 +1,17 @@
 "use client";
-import { useState, useCallback } from "react";
+import { useState, useCallback, ComponentType } from "react";
 import { Button } from "@/components/ui/button";
 import widgets from "@/components/widgets";
 import { useWidgetIndex } from "@/hooks/useWidgetIndex";
 import { useWidgetSocket } from "@/hooks/useWidgetSocket";
+import Status from "@/components/status";
+import {
+  Circle,
+  CircleAlert,
+  CircleCheck,
+  CircleX,
+  LucideProps,
+} from "lucide-react";
 
 export default function Home() {
   const { widgetIndex, advance } = useWidgetIndex();
@@ -18,7 +26,37 @@ export default function Home() {
     setWidgetMessage(ts);
   }, []);
 
-  useWidgetSocket(handleNext, handleFunction);
+  const { status } = useWidgetSocket(handleNext, handleFunction);
+
+  const getStatusColor = (
+    message: "connecting" | "connected" | "disconnected" | "failed",
+  ): "success" | "warning" | "danger" | "neutral" | "info" => {
+    switch (message) {
+      case "connecting":
+        return "info";
+      case "connected":
+        return "success";
+      case "disconnected":
+        return "warning";
+      default:
+        return "danger";
+    }
+  };
+
+  const getStatusIcon = (
+    message: "connecting" | "connected" | "disconnected" | "failed",
+  ): ComponentType<LucideProps> | "loading" | null => {
+    switch (message) {
+      case "connecting":
+        return "loading";
+      case "connected":
+        return CircleCheck;
+      case "disconnected":
+        return CircleAlert;
+      default:
+        return CircleX;
+    }
+  };
 
   const Widget = widgets.getAll()[widgetIndex];
 
@@ -28,6 +66,12 @@ export default function Home() {
       <Button onClick={handleNext} className="absolute top-10 left-10">
         Next Widget
       </Button>
+      <Status
+        description={status}
+        Icon={getStatusIcon(status)}
+        variant={getStatusColor(status)}
+        location="bottom"
+      />
     </main>
   );
 }

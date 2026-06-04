@@ -9,13 +9,15 @@ interface Props {
   title?: string | null;
   description?: string | null;
   variant: "success" | "warning" | "danger" | "neutral" | "info";
+  location?: "top" | "bottom";
 }
 
 export default function Status({
+  variant,
   Icon = null,
   title = null,
   description = null,
-  variant,
+  location = "top",
 }: Props) {
   const color =
     (
@@ -35,7 +37,9 @@ export default function Status({
     ) : null;
 
   return (
-    <Card className="absolute top-10 right-10">
+    <Card
+      className={`absolute ${location === "bottom" ? " bottom-10 right-10" : "top-10 right-10"}`}
+    >
       <CardContent className={`flex items-center gap-2 ${color}`}>
         {iconComponent}
         <p>
