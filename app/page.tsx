@@ -6,15 +6,24 @@ import { useWidgetIndex } from "@/hooks/useWidgetIndex";
 import { useWidgetSocket } from "@/hooks/useWidgetSocket";
 import Status from "@/components/status";
 import {
-  Circle,
   CircleAlert,
   CircleCheck,
   CircleX,
+  LayoutDashboard,
   LucideProps,
 } from "lucide-react";
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
+import { Card, CardContent } from "@/components/ui/card";
 
 export default function Home() {
-  const { widgetIndex, advance } = useWidgetIndex();
+  const { widgetIndex, advance, goToWidget } = useWidgetIndex();
   const [widgetMessage, setWidgetMessage] = useState<number>(0);
 
   const handleNext = useCallback(() => {
@@ -63,15 +72,68 @@ export default function Home() {
   return (
     <main className="min-h-screen p-10">
       <Widget.widget message={widgetMessage} />
-      <Button onClick={handleNext} className="absolute top-10 left-10">
-        Next Widget
-      </Button>
-      <Status
-        description={status}
-        Icon={getStatusIcon(status)}
-        variant={getStatusColor(status)}
-        location="bottom"
-      />
+      <div className="flex gap-3 absolute top-10 right-10 size">
+        <Status
+          description={status}
+          Icon={getStatusIcon(status)}
+          variant={getStatusColor(status)}
+        />
+        <Sheet>
+          <SheetTrigger asChild>
+            <Button onClick={handleNext} variant="glass">
+              <LayoutDashboard />
+              Widgets
+            </Button>
+          </SheetTrigger>
+          <SheetContent>
+            <SheetHeader>
+              <SheetTitle>Select a widget</SheetTitle>
+              <SheetDescription>
+                Select a widget to navigate to it
+              </SheetDescription>
+            </SheetHeader>
+            <SheetDescription className="px-5 flex flex-col gap-3">
+              {widgets.getAll().map((widgetList) => {
+                return (
+                  <button
+                    onClick={() => {
+                      goToWidget(widgetList.id);
+                    }}
+                    key={widgetList.id}
+                    className="w-full hover:cursor-pointer"
+                  >
+                    <Card
+                      variant={
+                        Widget?.id === widgetList.id ? "glass-active" : "glass"
+                      }
+                      className=" w-full"
+                    >
+                      <CardContent className="flex gap-2 items-center">
+                        {/* <Image
+                        src={channelList.imageUrl ?? "/images/radio.png"}
+                        alt="Radio image"
+                        height={40}
+                        width={40}
+                        className=" h-10 w-10 object-contain"
+                        loading="eager"
+                      /> */}
+                        <div className="bg-primary rounded-md h-10 w-10 flex justify-center items-center">
+                          <widgetList.icon className="text-white" />
+                        </div>
+                        <div className="">
+                          <p className="text-white font-bold">
+                            {widgetList.name}
+                          </p>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </button>
+                );
+              })}
+            </SheetDescription>
+          </SheetContent>
+        </Sheet>
+      </div>
     </main>
   );
 }

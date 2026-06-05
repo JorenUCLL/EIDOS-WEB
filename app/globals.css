@@ -104,3 +104,21 @@
     @apply font-sans;
   }
 }
+
+.glass {
+  backdrop-filter: blur(20px) saturate(160%);
+  background: oklch(0.26 0 0 / 75%);
+  ring: 1px solid oklch(1 0 0 / 10%);
+  box-shadow:
+    0 8px 32px oklch(0 0 0 / 40%),
+    inset 0 1px 0 oklch(1 0 0 / 8%);
+}
+
+.glass-primary {
+  backdrop-filter: blur(20px) saturate(180%);
+  background: oklch(0.54 0.07 240 / 25%);
+  outline: 1px solid oklch(0.54 0.07 240 / 25%);
+  box-shadow:
+    0 8px 32px oklch(0 0 0 / 40%),
+    inset 0 1px 0 oklch(1 0 0 / 6%);
+}
