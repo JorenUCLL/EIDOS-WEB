@@ -21,16 +21,18 @@ export default function Radio2Widget({ message }: { message: number | null }) {
   } = useRadio(message);
 
   return (
-    <section className="flex flex-col gap-20">
-      <div className="flex flex-col items-center gap-10">
-        <Image
-          src={channel?.imageUrl ?? "/images/radio.png"}
-          alt="Radio image"
-          height={200}
-          width={200}
-          className="h-52 w-auto object-contain"
-          loading="eager"
-        />
+    <section className="flex flex-col gap-20 py-20">
+      <div className="flex flex-col items-center gap-10 ">
+        <div className="h-64 w-64 rounded-full bg-primary flex items-center justify-center">
+          <Image
+            src={channel?.imageUrl ?? "/images/radio.png"}
+            alt="Radio image"
+            height={200}
+            width={200}
+            className="h-52 w-52 object-contain"
+            loading="eager"
+          />
+        </div>
       </div>
 
       <div className="flex flex-col items-center gap-4">
