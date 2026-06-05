@@ -64,12 +64,11 @@ export default function Home() {
   return (
     <main className="min-h-screen p-10">
       <Widget.widget message={widgetMessage} />
-      <div className="flex gap-3 absolute top-10 right-10">
+      <div className="flex gap-3 absolute top-10 right-10 size">
         <Status
           description={status}
           Icon={getStatusIcon(status)}
           variant={getStatusColor(status)}
-          location="bottom"
         />
         <Button onClick={handleNext} variant="glass">
           <LayoutDashboard />
