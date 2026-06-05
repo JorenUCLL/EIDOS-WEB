@@ -1,28 +1,15 @@
 import { Widget } from "@/types";
-import PhoneWidget from "./phone";
+import { RadioIcon } from "lucide-react";
 import RadioWidget from "./radio";
-import { PhoneIcon, RadioIcon } from "lucide-react";
-import Radio2Widget from "./radio2";
 
 const getAll = (): Widget[] => {
   return [
+
     {
       id: "radio",
       name: "Radio",
       widget: RadioWidget,
       icon: RadioIcon
-    },
-    {
-      id: "radio2",
-      name: "Radio2",
-      widget: Radio2Widget,
-      icon: RadioIcon
-    },
-    {
-      id: "phone",
-      name: "Phone",
-      widget: PhoneWidget,
-      icon: PhoneIcon
     },
   ];
 }

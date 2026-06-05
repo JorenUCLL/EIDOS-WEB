@@ -2,7 +2,6 @@
 import { LucideProps } from "lucide-react";
 import { ComponentType } from "react";
 import { Spinner } from "./ui/spinner";
-import { Card, CardContent } from "./ui/card";
 import { Button } from "./ui/button";
 
 interface Props {
@@ -10,7 +9,7 @@ interface Props {
   title?: string | null;
   description?: string | null;
   variant: "success" | "warning" | "danger" | "neutral" | "info";
-  location?: "top" | "bottom";
+  className?: string;
 }
 
 export default function Status({
@@ -18,7 +17,7 @@ export default function Status({
   Icon = null,
   title = null,
   description = null,
-  location = "top",
+  className = "",
 }: Props) {
   const color =
     (
@@ -41,12 +40,8 @@ export default function Status({
     <Button
       variant="glass-disabled"
       disabled={true}
-      className={color}
-      // className={`absolute ${location === "bottom" ? " bottom-10 right-10" : "top-10 right-10"}`}
+      className={`${color} ${className}`}
     >
-      {/* <CardContent
-        className={`flex items-center justify-center gap-2 ${color}`}
-      > */}
       {iconComponent}
       <p>
         {title && (
@@ -56,7 +51,6 @@ export default function Status({
         )}
         {description}
       </p>
-      {/* </CardContent> */}
     </Button>
   );
 }
