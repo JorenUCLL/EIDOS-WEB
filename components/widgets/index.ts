@@ -4,7 +4,6 @@ import RadioWidget from "./radio";
 
 const getAll = (): Widget[] => {
   return [
-
     {
       id: "radio",
       name: "Radio",

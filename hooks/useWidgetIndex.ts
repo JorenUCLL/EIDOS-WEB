@@ -28,5 +28,14 @@ export function useWidgetIndex() {
     setWidgetIndex(next);
   }, []);
 
-  return { widgetIndex, advance };
+  const goToWidget = useCallback((id: string) => {
+    const next = widgets.getById(id);
+    indexRef.current = next;
+    const params = new URLSearchParams(window.location.search);
+    params.set("id", id);
+    window.history.replaceState(null, "", `?${params.toString()}`);
+    setWidgetIndex(next);
+  }, []);
+
+  return { widgetIndex, advance, goToWidget };
 }
