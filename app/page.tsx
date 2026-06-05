@@ -10,6 +10,7 @@ import {
   CircleAlert,
   CircleCheck,
   CircleX,
+  LayoutDashboard,
   LucideProps,
 } from "lucide-react";
 
@@ -63,15 +64,18 @@ export default function Home() {
   return (
     <main className="min-h-screen p-10">
       <Widget.widget message={widgetMessage} />
-      <Button onClick={handleNext} className="absolute top-10 left-10">
-        Next Widget
-      </Button>
-      <Status
-        description={status}
-        Icon={getStatusIcon(status)}
-        variant={getStatusColor(status)}
-        location="bottom"
-      />
+      <div className="flex gap-3 absolute top-10 right-10">
+        <Status
+          description={status}
+          Icon={getStatusIcon(status)}
+          variant={getStatusColor(status)}
+          location="bottom"
+        />
+        <Button onClick={handleNext} variant="glass">
+          <LayoutDashboard />
+          Next Widget
+        </Button>
+      </div>
     </main>
   );
 }
