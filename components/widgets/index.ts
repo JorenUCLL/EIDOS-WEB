@@ -1,6 +1,7 @@
 import { Widget } from "@/types";
-import { RadioIcon } from "lucide-react";
+import { MessageCircleIcon, RadioIcon } from "lucide-react";
 import RadioWidget from "./radio";
+import TextWidget from "./text";
 
 const getAll = (): Widget[] => {
   return [
@@ -9,6 +10,12 @@ const getAll = (): Widget[] => {
       name: "Radio",
       widget: RadioWidget,
       icon: RadioIcon
+    },
+    {
+      id: "sos",
+      name: "SOS Message",
+      widget: TextWidget,
+      icon: MessageCircleIcon
     },
   ];
 }

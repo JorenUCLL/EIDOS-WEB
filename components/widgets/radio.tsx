@@ -9,7 +9,7 @@ import { Card, CardContent } from "../ui/card";
 import { ChevronFirst, ChevronLast } from "lucide-react";
 import RadialBarsKnob from "../animated-circle";
 
-export default function Radio2Widget({ message }: { message: number | null }) {
+export default function RadioWidget({ message }: { message: number | null }) {
   const {
     channel,
     audioRef,
