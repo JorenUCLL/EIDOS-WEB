@@ -4,15 +4,15 @@ import { useEffect, useRef, useState } from "react";
 
 type TextStatus = "idle" | "armed" | "sending" | "sent" | "error";
 
-export function useText(message: number | null, coords: LngLatLike | null) {
+export function useText(message: number | null, coords: LngLatLike | null, address: string | null) {
   const [status, setStatus] = useState<TextStatus>("idle");
   const [countdown, setCountdown] = useState(0);
   const sendMessageTimestampRef = useRef(0);
   const countdownIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   const statusMessage: Record<TextStatus, string> = {
-    idle: "Send SOS",
-    armed: `Confirm to send SOS (${countdown}s)`,
+    idle: "Emergency",
+    armed: `Confirm to send SOS`,
     sending: "Sending SOS...",
     sent: "SOS sent!",
     error: "Failed to send SOS",
@@ -41,25 +41,11 @@ export function useText(message: number | null, coords: LngLatLike | null) {
     }, 1000);
   };
 
-  const resolveAddress = async (coords: [number, number]): Promise<string> => {
-    try {
-      const [lng, lat] = coords;
-      const res = await fetch(
-        `https://api.mapbox.com/geocoding/v5/mapbox.places/${lng},${lat}.json?access_token=${process.env.NEXT_PUBLIC_MAPBOX_TOKEN}`
-      );
-      const data = await res.json();
-      return data.features?.[0]?.place_name ?? "Unknown address";
-    } catch {
-      return "Unknown address";
-    }
-  };
-
   const sendMessage = async () => {
-    // const coordsValue = coords ? `coords` : "Unknown";
-    // const address = coords ? await resolveAddress(coords) : "Unknown";
-    // const mapsLink = coords
-    //   ? `https://www.google.com/maps?q=${coords[1]},${coords[0]}`
-    //   : null;
+    const coordsValue = coords ? `${coords[1]}, ${coords[0]}` : "Unknown";
+    const mapsLink = coords
+      ? `https://www.google.com/maps?q=${coords[1]},${coords[0]}`
+      : null;
 
     try {
       await fetch(process.env.NEXT_PUBLIC_DISCORD_WEBHOOK_URL!, {
@@ -68,9 +54,24 @@ export function useText(message: number | null, coords: LngLatLike | null) {
         body: JSON.stringify({
           username: "Emergency",
           avatar_url: "https://iconape.com/wp-content/files/jw/338761/png/338761.png",
-          content: "**Emergency:** There has been a report!",
+          content: "@everyone",
+          allowed_mentions: { "parse": ["everyone"] },
           embeds: [
             {
+              author: {
+                name: process.env.NEXT_PUBLIC_REPORTER ?? "Jonas Roets",
+              },
+              footer: {
+                text: "It is possible that the address is not completely accurate, so always check the coordinates carefully.",
+
+              },
+              description: "An emergancy signal has been send",
+              thumbnail: {
+                url: "https://iconape.com/wp-content/files/jw/338761/png/338761.png"
+              },
+              timestamp: new Date().toISOString(),
+              title: "Emergency",
+              color: 4682899,
               fields: [
                 {
                   name: "Reporter",
@@ -79,20 +80,45 @@ export function useText(message: number | null, coords: LngLatLike | null) {
                 },
                 {
                   name: "Coordinates",
-                  value: "TODO",
+                  value: coordsValue,
                   inline: false,
-                }
-                // {
-                //   name: "Address",
-                //   value: address,
-                //   inline: false,
-                // },
-                // ...(mapsLink
-                //   ? [{ name: "Maps", value: `[Open in Google Maps](${mapsLink})`, inline: false }]
-                //   : []),
+                },
+                {
+                  name: "Address",
+                  value: address,
+                  inline: false,
+                },
+                ...(mapsLink
+                  ? [{ name: "Maps", value: `[Open in Google Maps](${mapsLink})`, inline: false }]
+                  : []),
               ],
             },
           ],
+          poll: {
+            question: {
+              text: "Who will go help?"
+            },
+            answers: [
+              {
+                poll_media: {
+                  text: "On my way!",
+                  emoji: {
+                    name: "✅"
+                  }
+                }
+              },
+              {
+                poll_media: {
+                  text: "I can't right now",
+                  emoji: {
+                    name: "❌"
+                  }
+                }
+              }
+            ],
+            allow_multiselect: false,
+            duration: 48
+          },
         }),
       });
       setStatus("sent");
@@ -130,5 +156,5 @@ export function useText(message: number | null, coords: LngLatLike | null) {
     return () => clearCountdown();
   }, []);
 
-  return { send, status, statusMessage: statusMessage[status] };
+  return { send, countdown, status, statusMessage: statusMessage[status] };
 }

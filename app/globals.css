@@ -50,7 +50,8 @@
 
 /* Single theme — always dark. No light mode, no .dark toggle needed. */
 :root {
-  --background: oklch(0.2 0 0);
+  /* --background: oklch(0.2 0 0); */
+  --background: oklch(26.033% 0.00003 271.152);
   /* #2A2A2A */
   --foreground: oklch(0.635 0 0);
   /* #9A9A9A */
