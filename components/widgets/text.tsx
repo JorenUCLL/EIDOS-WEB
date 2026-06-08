@@ -7,8 +7,10 @@ import { Card } from "../ui/card";
 import { Locate, MapPin } from "lucide-react";
 
 export default function TextWidget({ message }: { message: number | null }) {
-  const { send } = useText(message);
-  const { mapContainer } = useMap([50.84703597928743, 4.726153354995554]);
+  const { mapContainer, coords } = useMap([
+    50.84703597928743, 4.726153354995554,
+  ]);
+  const { send } = useText(message, coords);
 
   return (
     <section className="flex flex-col gap-16">
@@ -39,13 +41,15 @@ export default function TextWidget({ message }: { message: number | null }) {
           <p className="uppercase flex gap-1 items-center">
             <MapPin size={20} /> Live Location
           </p>
-          <div className="rounded-lg">
+          <div>
             <div
               ref={mapContainer}
-              className=""
+              className="rounded-t-lg"
               style={{ width: 400, height: 300 }}
             />
-            <div className="bg-black"></div>
+            <div className="rounded-b-lg bg-primary text-white px-2 py-1">
+              <p>Address 54</p>
+            </div>
           </div>
         </Card>
       </div>

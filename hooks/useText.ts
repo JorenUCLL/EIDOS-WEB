@@ -1,9 +1,10 @@
 "use client";
+import { LngLatLike } from "mapbox-gl";
 import { useEffect, useRef, useState } from "react";
 
 type TextStatus = "idle" | "armed" | "sending" | "sent" | "error";
 
-export function useText(message: number | null) {
+export function useText(message: number | null, coords: LngLatLike | null) {
   const [status, setStatus] = useState<TextStatus>("idle");
   const [countdown, setCountdown] = useState(0);
   const sendMessageTimestampRef = useRef(0);
@@ -40,19 +41,64 @@ export function useText(message: number | null) {
     }, 1000);
   };
 
-  const sendMessage = async () => {
-    const url = `https://api.callmebot.com/whatsapp.php?phone=${process.env.NEXT_PUBLIC_PHONE_NUMBER}&text=SOS%20Message&apikey=${process.env.NEXT_PUBLIC_PHONE_API}`;
-    console.debug("[useText] Sending SOS to URL:", url);
-
-    setStatus("sending");
+  const resolveAddress = async (coords: [number, number]): Promise<string> => {
     try {
-      const res = await fetch(url, { mode: "no-cors" });
-      // no-cors responses are always "opaque" — status/body unreadable, but request went through
-      console.debug("[useText] Fetch completed (opaque response, no-cors mode)", res);
+      const [lng, lat] = coords;
+      const res = await fetch(
+        `https://api.mapbox.com/geocoding/v5/mapbox.places/${lng},${lat}.json?access_token=${process.env.NEXT_PUBLIC_MAPBOX_TOKEN}`
+      );
+      const data = await res.json();
+      return data.features?.[0]?.place_name ?? "Unknown address";
+    } catch {
+      return "Unknown address";
+    }
+  };
+
+  const sendMessage = async () => {
+    // const coordsValue = coords ? `coords` : "Unknown";
+    // const address = coords ? await resolveAddress(coords) : "Unknown";
+    // const mapsLink = coords
+    //   ? `https://www.google.com/maps?q=${coords[1]},${coords[0]}`
+    //   : null;
+
+    try {
+      await fetch(process.env.NEXT_PUBLIC_DISCORD_WEBHOOK_URL!, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          username: "Emergency",
+          avatar_url: "https://iconape.com/wp-content/files/jw/338761/png/338761.png",
+          content: "**Emergency:** There has been a report!",
+          embeds: [
+            {
+              fields: [
+                {
+                  name: "Reporter",
+                  value: process.env.NEXT_PUBLIC_REPORTER ?? "Jonas Roets",
+                  inline: false,
+                },
+                {
+                  name: "Coordinates",
+                  value: "TODO",
+                  inline: false,
+                }
+                // {
+                //   name: "Address",
+                //   value: address,
+                //   inline: false,
+                // },
+                // ...(mapsLink
+                //   ? [{ name: "Maps", value: `[Open in Google Maps](${mapsLink})`, inline: false }]
+                //   : []),
+              ],
+            },
+          ],
+        }),
+      });
       setStatus("sent");
       setTimeout(() => setStatus("idle"), 3000);
     } catch (err) {
-      console.error("[useText] Fetch failed:", err);
+      console.error("[useText] Failed to send:", err);
       setStatus("error");
       setTimeout(() => setStatus("idle"), 3000);
     }
@@ -62,10 +108,7 @@ export function useText(message: number | null) {
     const timestamp = Date.now();
     const elapsed = timestamp - sendMessageTimestampRef.current;
 
-    console.debug("[useText] send() called — elapsed since arm:", elapsed, "ms, status:", status);
-
     if (elapsed > 10_000) {
-      console.debug("[useText] Arming SOS — waiting for confirmation within 10s");
       sendMessageTimestampRef.current = timestamp;
       setStatus("armed");
       startCountdown(10);
@@ -74,6 +117,7 @@ export function useText(message: number | null) {
 
     clearCountdown();
     sendMessageTimestampRef.current = 0;
+    setStatus("sending");
     await sendMessage();
   };
 
@@ -82,14 +126,9 @@ export function useText(message: number | null) {
     send();
   }, [message]);
 
-  // Cleanup interval on unmount
   useEffect(() => {
     return () => clearCountdown();
   }, []);
 
-  return {
-    send,
-    status,
-    statusMessage: statusMessage[status],
-  };
+  return { send, status, statusMessage: statusMessage[status] };
 }
