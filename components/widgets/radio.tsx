@@ -6,7 +6,7 @@ import { Button } from "../ui/button";
 import { useRadio } from "@/hooks/useRadio";
 import channels from "@/lib/radio";
 import { Card, CardContent } from "../ui/card";
-import { ArrowLeft, ArrowRight, ChevronFirst, ChevronLast } from "lucide-react";
+import { ChevronFirst, ChevronLast } from "lucide-react";
 import RadialBarsKnob from "../animated-circle";
 
 export default function Radio2Widget({ message }: { message: number | null }) {

@@ -57,14 +57,6 @@ export default function SelectWidget({
                   className=" w-full"
                 >
                   <CardContent className="flex gap-2 items-center">
-                    {/* <Image
-                        src={channelList.imageUrl ?? "/images/radio.png"}
-                        alt="Radio image"
-                        height={40}
-                        width={40}
-                        className=" h-10 w-10 object-contain"
-                        loading="eager"
-                      /> */}
                     <div className="bg-primary rounded-md h-10 w-10 flex justify-center items-center">
                       <widgetList.icon className="text-white" />
                     </div>

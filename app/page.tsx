@@ -20,7 +20,7 @@ export default function Home() {
       <Widget.widget message={widgetMessage} />
       <div className="flex gap-3 absolute top-10 right-10 size">
         <Status
-          description={status}
+          description={status.charAt(0).toUpperCase() + status.slice(1)}
           Icon={statusIcon}
           variant={statusVariant}
         />
