@@ -1,41 +1,27 @@
 "use client";
-
-import Image from "next/image";
-import Status from "../status";
 import { Button } from "../ui/button";
-import { useRadio } from "@/hooks/useRadio";
-import channels from "@/lib/radio";
-import { Card, CardContent } from "../ui/card";
-import { ChevronFirst, ChevronLast } from "lucide-react";
-import RadialBarsKnob from "../animated-circle";
 import { useText } from "@/hooks/useText";
+import { useMap } from "@/hooks/useMap";
+import "mapbox-gl/dist/mapbox-gl.css";
+import { Card } from "../ui/card";
+import { Locate, MapPin } from "lucide-react";
 
 export default function TextWidget({ message }: { message: number | null }) {
-  const { send, statusMessage, status } = useText(message);
+  const { send } = useText(message);
+  const { mapContainer } = useMap([50.84703597928743, 4.726153354995554]);
 
   return (
     <section className="flex flex-col gap-16">
-      <div className="flex flex-col items-center gap-10 ">
-        {/* <RadialBarsKnob size={440} speed={2}> */}
-        <div className="py-20">
+      <div className="flex flex-col items-center gap-10">
+        <div className="py-10">
           <div className="h-64 w-64 rounded-full bg-primary flex items-center justify-center">
-            {/* <Image
-              src={channel?.imageUrl ?? "/images/radio.png"}
-              alt="Radio image"
-              height={200}
-              width={200}
-              className="h-52 w-52 object-contain"
-              loading="eager"
-            /> */}
-            <h1 className="text-background text-7xl font-bold">SOS</h1>
+            <h1 className="text-white text-7xl font-bold">SOS</h1>
           </div>
         </div>
-        {/* </RadialBarsKnob> */}
       </div>
-
       <div className="flex flex-col items-center gap-8">
         <h1 className="justify-center flex text-5xl font-bold text-white">
-          {statusMessage}
+          Noodoproep
         </h1>
         <div className="flex flex-col items-center gap-3">
           <div className="flex gap-7">
@@ -49,6 +35,19 @@ export default function TextWidget({ message }: { message: number | null }) {
             </Button>
           </div>
         </div>
+        <Card className="px-4">
+          <p className="uppercase flex gap-1 items-center">
+            <MapPin size={20} /> Live Location
+          </p>
+          <div className="rounded-lg">
+            <div
+              ref={mapContainer}
+              className=""
+              style={{ width: 400, height: 300 }}
+            />
+            <div className="bg-black"></div>
+          </div>
+        </Card>
       </div>
     </section>
   );
